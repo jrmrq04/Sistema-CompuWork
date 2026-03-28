@@ -20,5 +20,7 @@ java -jar "ubicacion del archivo sin las comillas"\SistemaCompuWork.jar
 
 Instruccion para ejecutar las pruebas:
 
+Antes de comenzar las pruebas unitarias, asegurese de obtener el JUnit 4.13.2 y el Hamcrest 1.3 para que las pruebas funcionen
+correctamente.
 En Netbeans con el proyecto abierto se da click en Run > Test Project para ejecutar todos los archivos de prueba
 o hacer click en un archivo de prueba Run > Test File
