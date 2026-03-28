@@ -24,3 +24,84 @@ Antes de comenzar las pruebas unitarias, asegurese de obtener el JUnit 4.13.2 y 
 correctamente.
 En Netbeans con el proyecto abierto se da click en Run > Test Project para ejecutar todos los archivos de prueba
 o hacer click en un archivo de prueba Run > Test File
+
+
+<h2>Diagrama de clases</h2>
+
+```mermaid
+classDiagram
+    class Empleado {
+        <<abstract>>
+        #int idEmpleado
+        #String nombre
+        #String email
+        #LocalDate fechaIngreso
+        +calcularDesempeno()* double
+        +getInfo() String
+    }
+
+    class Permanente {
+        -double salarioBase
+        -String beneficios
+        -LocalDate fechaRenovacion
+        +calcularDesempeno() double
+        +calcularPrestaciones() double
+        +getInfo() String
+    }
+
+    class Temporal {
+        -LocalDate fechaFinContrato
+        -String agenciaTemporal
+        -double tarifaPorHora
+        +calcularDesempeno() double
+        +extenderContrato(LocalDate) void
+        +getInfo() String
+    }
+
+    class Departamento {
+        -int idDepartamento
+        -String nombre
+        -String descripcion
+        -List~Empleado~ empleados
+        +agregarEmpleado(Empleado) void
+        +eliminarEmpleado(Empleado) void
+        +buscarEmpleadoPorId(int) Empleado
+        +listarEmpleados() List~Empleado~
+    }
+
+    class Metrica {
+        -String nombre
+        -String formula
+        -double ponderacion
+    }
+
+    class ReporteDesempeno {
+        -int idReporte
+        -LocalDateTime fechaGeneracion
+        -String resultado
+        +generarIndividual(Empleado) void
+        +generarDepartamento(Departamento) void
+        +imprimirReporte() void
+    }
+
+    class AsignacionInvalidaException {
+        +AsignacionInvalidaException(String)
+    }
+    class EmpleadoNoEncontradoException {
+        +EmpleadoNoEncontradoException(String)
+    }
+    class DepartamentoNoEncontradoException {
+        +DepartamentoNoEncontradoException(String)
+    }
+
+    Empleado <|-- Permanente : herencia
+    Empleado <|-- Temporal : herencia
+    Departamento "1" o-- "*" Empleado : composición
+    ReporteDesempeno ..> Empleado : usa (polimorfismo)
+    ReporteDesempeno ..> Departamento : usa
+    Departamento ..> AsignacionInvalidaException : lanza
+    Departamento ..> EmpleadoNoEncontradoException : lanza
+    Exception <|-- AsignacionInvalidaException
+    Exception <|-- EmpleadoNoEncontradoException
+    Exception <|-- DepartamentoNoEncontradoException
+```
