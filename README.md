@@ -100,8 +100,56 @@ classDiagram
     ReporteDesempeno ..> Empleado : usa (polimorfismo)
     ReporteDesempeno ..> Departamento : usa
     Departamento ..> AsignacionInvalidaException : lanza
+
+
     Departamento ..> EmpleadoNoEncontradoException : lanza
     Exception <|-- AsignacionInvalidaException
     Exception <|-- EmpleadoNoEncontradoException
     Exception <|-- DepartamentoNoEncontradoException
+```
+<h2>Diagramas de flujo</h2>
+<p>Ciclo de vida del reporte de desempeño</p>
+
+```mermaid
+sequenceDiagram
+    participant U as Usuario (Consola)
+    participant S as SistemaCompuWork
+    participant D as Departamento
+    participant E as Empleado (Permanente/Temporal)
+    participant R as ReporteDesempeno
+
+    U->>S: Opción 6 (Reporte por Depto)
+    S->>S: buscarDepartamentoPorId(id)
+    S->>R: new ReporteDesempeno(id)
+    S->>R: generarDepartamento(depto)
+    R->>D: listarEmpleados()
+    D-->>R: List<Empleado>
+    loop Para cada empleado
+        R->>E: calcularDesempeno() ← POLIMORFISMO
+        E-->>R: double (valor de desempeño)
+        R->>E: getInfo() ← SOBREESCRITURA
+        E-->>R: String (info del empleado)
+    end
+    R->>R: Calcular promedio
+    R-->>S: resultado (String)
+    S->>R: imprimirReporte()
+    R-->>U: Reporte en consola
+```
+<p>Asignación de un empleado a un departamento</p>
+
+```mermaid
+flowchart TD
+    A[Usuario selecciona opción 3] --> B[Listar empleados]
+    B --> C[Ingresar ID empleado]
+    C --> D{¿Empleado existe?}
+    D -- No --> E[Mensaje: no encontrado]
+    D -- Sí --> F[Listar departamentos]
+    F --> G[Ingresar ID departamento]
+    G --> H{¿Departamento existe?}
+    H -- No --> I[Mensaje: no encontrado]
+    H -- Sí --> J[depto.agregarEmpleado]
+    J --> K{Validaciones}
+    K -- "null" --> L[AsignacionInvalidaException]
+    K -- "duplicado" --> L
+    K -- "válido" --> M[Empleado agregado ✓]
 ```
